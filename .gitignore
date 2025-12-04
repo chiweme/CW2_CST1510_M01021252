@@ -1,0 +1,17 @@
+
+#environment & cache
+.venv/
+__pycache__/
+*.pyc
+
+#database files
+*.db
+*.db-journal
+*.sqlite-journal
+
+#editor settings
+.vscode/
+
+#sensitive data
+users.txt
+.env
