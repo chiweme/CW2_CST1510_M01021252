@@ -159,7 +159,7 @@ if __name__ == "__main__":
     conn = CreateConnection()
     CreateTables(conn)
     #Example test data for demonstration
-    AddUser(conn, "athena", "password321", "data_science")
+    #AddUser(conn, "athena", "password321", "data_science")
     AddIncident(conn, "Phishing email spike", "High", "2025-11-27", "Multiple phishing attemtps detected", "Open")
     AddDataset(conn, "Sales Data", 5000, 11, "Monthly sales info")
     AddTicket(conn, "Laptop not starting", "Bob", "2025-11-22", "open",0)
