@@ -1,60 +1,82 @@
 import streamlit as st 
-from auth_backend import verify_user
+import sys 
+import os 
 
-st.set_page_config(page_title="Multi-Domain Dashboard", layout="wide")
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(project_root)
 
+from auth import register_user, login_user
+from database import CreateConnection
+
+
+st.set_page_config(page_title="Login / Register", layout="centered")
 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
-    st.session_state.username = None
-    st.session_state.role = None
+if "username" not in st.session_state:
+    st.session_state.username = ""
+if "role" not in st.session_state:
+    st.session_state.role = ""
     
     
-def login_screen():
-    st.title("Secure Login Portal")
+ROLE_PAGE = {
+   "cyber": "pages/1_Cybersecurity.py",
+   "data": "pages/2_DataScience.py",
+   "data_science": "pages/2_DataScience.py",
+   "it": "pages/3_ITOperations.py"
+}
+
+if st.session_state.logged_in:
+    st.success(f"Already logged in as **{st.session_state.username}**")
     
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+    target_page = ROLE_PAGE.get(st.session_state.role, None)
+    if target_page:
+        if st.button("Go to your dashboard"):
+            st.switch_page(target_page)
+    st.stop()
     
-    if st.button("Login"):
+st.title("Welcome")
+st.write("Please log in or create an acccount.")
+
+tab_login, tab_register = st.tabs(["Login", "Register"])
+
+with tab_login:
+    st.subheader("Login")
+    
+    username = st.text_input("Username", key="login_username")
+    password = st.text_input("Password", key="login_password", type="password")
+    
+    if st.button("Log in", type="primary"):
+        success, role = login_user(username, password)
         
-        role = verify_user(username, password)
-        
-        if role:
+        if success:
             st.session_state.logged_in = True
             st.session_state.username = username
             st.session_state.role = role
-            st.success(f"Login successfull! Logged in as: **{role.upper()}**")
-            st.rerun()
             
+            st.success(f"Welcome back, {username}!")
+            
+            st.switch_page(ROLE_PAGE[role])
         else:
             st.error("Invalid username or password.")
             
-            
-def route_user():
-    st.sidebar.title("Navigation")
-    st.sidebar.markdown(f"**{st.session_state.username}** ({st.session_state.role})")
+with tab_register:
+    st.subheader("Register")
     
-    if st.sidebar.button("Logout"):
-        st.session_state.logged_in = False
-        st.session_state.username = None
-        st.session_state.role = None
-        st.rerun()
-        
-        
-    role = st.session_state.role
+    new_username = st.text_input("Choose a username", key="reg_username")
+    new_password = st.text_input("Choose a password", type="password", key="reg_password")
+    confirm_password = st.text_input("Confirm password", type="password", key="reg_confirm")
+    role = st.selectbox("Choose your role", ["cyber", "data_science", "it"])
     
-    if role == "cyber":
-        st.switch_page("pages/1_Cybersecurity.py")
-    elif role == "data":
-        st.switch_page("pages/2_DataScience.py")
-    elif role == "it":
-        st.switch_page("page/3_ITOperations.py")
-    else:
-        st.error("unkown role in database. Please contact admin.")
-        
-        
-if st.session_state.logged_in:
-    route_user()
-else:
-    login_screen()
+    if st.button("Create account"):
+        if new_password != confirm_password:
+            st.error("Passwords do not match!")
+        elif new_username.strip() == "":
+            st.error("Username cannot be empty.")
+        else:
+            ok = register_user(new_username, new_password, role)
+            if ok:
+                st.success("Account created successfully! You can now log in.")
+            else:
+                st.error("Username already exists.")
+                   
