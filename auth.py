@@ -86,8 +86,11 @@ def register_user(username: str, password: str, role: str):
         return False
     
     hashed = hash_password(password)
-    save_user(username, hashed, role)
-    return True 
+    
+    with open(USER_DATA_FILE, "a") as file:
+        file.writes(f"{username},{hashed},{role}\n")
+        
+    return True, "User registered successfully." 
     
 
 #login user

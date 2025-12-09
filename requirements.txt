@@ -1,3 +1,5 @@
 streamlit
+bycrpt
 pandas
 plotly
+google-genai

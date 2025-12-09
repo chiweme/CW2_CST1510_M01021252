@@ -15,3 +15,4 @@ __pycache__/
 #sensitive data
 users.txt
 .env
+.streamlit/secrets.toml

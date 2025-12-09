@@ -1,96 +1,104 @@
-#CST1510 Coursework - Multi-Domain Intelligence Platform
-Student Name: Chiweme 
+CST1510 Coursework — Multi-Domain Intelligence Platform
+
+Student: Chiweme
 Student ID: M01021252
 
-this project is a five-week incremental build of a secure analytics platform used by three technical domains:
-- **Cybersecurity**
-- **Data Science**
-- **IT Operations**
+This project is a five-week incremental build of a secure, multi-domain analytics platform. It evolves from a simple CLI authentication tool into a full AI-powered Streamlit web system.
 
-Each week expands the system, starting with basic authentication and ending with a fully modular OOP architecture.
+Week 7 — Authentication System (CLI)
 
-#Week 7: Secure Authentication System(CLI)
-A pyhton command-line authentication system supporting:
-##Features
+Builds the foundation of the system: a secure login & registration module using Python.
+
+Features
+
 - User registration
-- Login
-- Secure password hashing (bycrypt)
-- input validation
-- peresistent `users.txt` storage
+- User login
+- Secure password hashing (bcrypt)
+- Input validation
+- Persistent storage (users.txt)
+- Main Files
+- auth.py
+- users.txt
+- .gitignore
 
-##Files 
-- `auth.py` - CLI authentication logic
-- `users.txt` - user database
-- `.gitignore` - hides virtualenv and sensitive files
-- `README.md` - documentation
-
-##How to run (Week 7)
+How to Run (Week 7)
 python auth.py
 
-#Week 8 - SQLite Database & CRUD Operations 
+Week 8 — SQLite Database & CRUD Operations
+Introduces persistent storage using SQLite.
 
-week 8 introduces a persistent relational database using SQLite.
+Features
 
-##Features
-- SQLite database (`dashboard.db`)
+- SQLite database (dashboard.db)
 - Tables for:
     - Users
-    - Security Incidents 
-    - Datasets 
-    - IT Tickets
-- Full CRUD frunctions for all domain data
-- Database initialization script
+    - Security incidents
+    - Data science datasets
+    - IT operation tickets
+- Full CRUD functionality
+- Automatic database setup
 
-##Main file
-- `database.py`
+Main File
+- database.py
 
-##how to run (Week 8)
-Creates database & sample records:
-pyhton database.py
+How to Run (Week 8)
+python database.py
 
-#Week 9 - Streamlit Web Dashboard
-week 9 transforms the backend into a full interactive web dashboard.
 
-##Features 
+Week 9 — Streamlit Web Dashboard
+
+Turns the system into a full multi-page Streamlit web application.
+
+Features
+
 - Secure login using SQLite users table
-- Role-based routing 
-- Three seperate dashboards:
-    - **Cybersecurity Dashboard**
-    - **Data Science Dashboard**
-    - **IT Operations Dashboard**
-- Charts, metrics, and demonstration analytics
+- Role-based dashboard access
+- Three dashboards:
+    - Cybersecurity
+    - Data Science
+    - IT Operations
 - Session state management
-- Multi-page architecture using streamlit `/pages` folder
+- Charts, metrics, and sample analytics
+- Streamlit /pages structure
 
-##File structure 
-CW2_CST1510_M01021252/
-│── auth.py
-│── database.py
-│── requirements.txt
-│── README.md
-│── .gitignore
-│
-├── streamlitDashboard/
-│     ├── app.py
-│     ├── auth_backend.py
-│     └── pages/
-│          ├── 1_Cybersecurity.py
-│          ├── 2_DataScience.py
-│          └── 3_ITOperations.py
-│
-├── users.txt        (ignored by Git)
-├── dashboard.db     (ignored by Git)
-└── .venv/           (ignored)
-
-##How to run the web app
+How to Run the Web App
 cd streamlitDashboard
 streamlit run app.py
 
-#Requirements
+
+Week 10 — AI-Powered Dashboards (Gemini API)
+
+Adds intelligent AI assistants to every dashboard using Google Gemini.
+
+AI Features
+
+- Chat-based assistant in all three dashboards
+- Contextual memory (per-page chat history)
+- Domain-specific insights:
+    - Threat analysis
+    - Data science explanations
+    - IT operations workload analysis
+
+New File Added
+
+- gemini_api.py — handles all Gemini API communication
+
+Gemini API Setup
+
+Create the folder:
+streamlitDashboard/.streamlit/
+
+Inside it, create:
+secrets.toml
+GEMINI_API_KEY = "your-api-key-here"
+
+Requirements
+
 Install dependencies:
+
 pip install -r requirements.txt
+
 Contents of `requirements.txt`:
 - streamlit
 - pandas
 - plotly
-

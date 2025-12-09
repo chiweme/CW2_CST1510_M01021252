@@ -168,5 +168,6 @@ if __name__ == "__main__":
     print("Incidents:", GetIncidents(conn))
     print("Datasets:", GetDatasets(conn))
     print("Tickets:", GetTickets(conn))
-
-conn.close()
+    
+    
+    conn.close()
