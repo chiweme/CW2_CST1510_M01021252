@@ -23,7 +23,7 @@ def ask_gemini(prompt: str) -> str:
             model="gemini-2.0-flash",
             contents=prompt,
             config=GenerateContentConfig(
-                temperature=0.4 #small creativity for clarity
+                temperature=0.4 #lower temperature for concise, factual answers
             )
         )
     

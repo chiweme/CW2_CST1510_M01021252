@@ -1,5 +1,10 @@
 import streamlit as st 
-from gemini_api import ask_gemini_chat 
+import pandas as pd 
+from week11.services.ai_assistant import AIAssistant 
+import streamlit as st 
+
+ai = AIAssistant(api_key=st.secrets["GEMINI_API_KEY"])
+
 #access control tp prevent unauthorised users
 #if the user somehow navigates directly to this page wihtout logging in, we immediately block access and stop execution. 
 if "logged_in" not in st.session_state or not st.session_state.logged_in:
@@ -12,19 +17,35 @@ st.write("""
 Welcome to the Cybersecurity analytics dashboard.
 Here you will analyze phishing spikes, incident treands, and workflow bottlenecks.
 """)
-#example static chart
-st.subheader("Example Chart: Phishing Attempts Over Time")
-#a simple demonstration line chart 
-st.line_chart({
-    "Phishing Emails": [10, 20, 40, 30, 50, 80, 120]
-})
-#key cybersecurity indicators (static demo metrics)
+#load data
+df = pd.read_csv("data/cyber_incidents.csv")
+
+st.subheader("incident Records")
+st.dataframe(df)
+
+#metrics
 st.subheader("Key Metrics")
 col1, col2, col3 = st.columns(3)
 
-col1.metric("Total Incidents", 124)
-col2.metric("High Severity Alerts", 18)
-col3.metric("Avg Response Time", "2.4 hrs")
+col1.metric("Total Incidents", len(df))
+
+high_sev = (df["severity"] == "High").sum()
+col2.metric("High Severity", high_sev)
+
+open_count = (df["status"] == "open").sum()
+col3.metric("Open Incidents", open_count)
+
+#category Distribution
+if "category" in df.columns:
+    st.subheader("Incident Categories")
+    cat_counts = df["category"].value_counts()
+    st.bar_chart(cat_counts)
+    
+#severity breakdown
+st.subheader("severity Breakdown")
+sev_counts = df["severity"].value_counts()
+st.bar_chart(sev_counts)
+
 #cybersecurity AI assistant
 st.subheader("Cybersecurity AI Assistant")
 #initialize chat memory once per session
@@ -44,9 +65,11 @@ if prompt:
     #save the user's message in the conversation list
     st.session_state.cyber_chat.append({"role": "user", "content": prompt})
     #send the full conversation history to gemini
-    ai_reply = ask_gemini_chat(st.session_state.cyber_chat)
+    ai_reply = ai.chat(prompt)
     #save AI response to chat history
-    st.session_state.cyber_chat.append({"role": "assistant", "content": ai_reply})
+    st.session_state.cyber_chat.append(
+        {"role": "assistant", "content": ai_reply}    
+        )
     #display instantly
     st.chat_message("assistant").write(ai_reply)
 #clear chat memory
