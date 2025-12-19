@@ -65,7 +65,7 @@ if prompt:
     #save the user's message in the conversation list
     st.session_state.cyber_chat.append({"role": "user", "content": prompt})
     #send the full conversation history to gemini
-    ai_reply = ai.chat(prompt)
+    ai_reply = ai.ask(prompt)
     #save AI response to chat history
     st.session_state.cyber_chat.append(
         {"role": "assistant", "content": ai_reply}    
